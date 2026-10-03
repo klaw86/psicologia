@@ -32,8 +32,8 @@ function ArtigoNaoEncontrado() {
   return (
     <SiteLayout>
       <div className="container-site py-24 text-center">
-        <h1 className="text-3xl text-sage-deep">Artigo não encontrado</h1>
-        <Link to="/blog" className="mt-4 inline-block text-primary">Voltar ao blog</Link>
+        <h1 className="text-3xl text-wine font-medium">Artigo não encontrado</h1>
+        <Link to="/blog" className="mt-4 inline-block text-wine hover:underline font-medium">Voltar ao blog</Link>
       </div>
     </SiteLayout>
   );
@@ -46,9 +46,9 @@ function Artigo() {
   return (
     <SiteLayout>
       <article className="container-site max-w-3xl py-16 md:py-24">
-        <Link to="/blog" className="text-sm text-primary">← Blog</Link>
+        <Link to="/blog" className="text-sm text-wine hover:underline font-medium">← Blog</Link>
         <p className="eyebrow mt-8">{a.categoria}</p>
-        <h1 className="mt-3 text-4xl leading-tight text-sage-deep md:text-5xl">{a.titulo}</h1>
+        <h1 className="mt-3 text-4xl leading-tight text-wine font-medium md:text-5xl">{a.titulo}</h1>
         {a.publicado_em && <p className="mt-4 text-sm text-muted-foreground">{fmtData(a.publicado_em, { day: "2-digit", month: "long", year: "numeric" })}</p>}
         <p className="mt-8 text-xl leading-relaxed text-muted-foreground">{a.resumo}</p>
         <div className="mt-8"><Markdown texto={a.conteudo} /></div>

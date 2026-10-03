@@ -13,6 +13,18 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
+
+  /* Luxury Editorial Named Palette */
+  --color-charcoal: #1F1F21;
+  --color-ivory: #F7F4ED;
+  --color-gold: #C5A25D;
+  --color-gold-hover: #B5924B;
+  --color-wine: #5C2A3A;
+  --color-wine-hover: #481E2B;
+  --color-smoke: #A29C92;
+  --color-smoke-light: #DDD7CD;
+
+  /* Theme tokens */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -33,8 +45,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+
+  /* Palette compatibility mappings */
   --color-sand: var(--sand);
   --color-sage-deep: var(--sage-deep);
+
   --color-whatsapp: var(--whatsapp);
   --color-whatsapp-foreground: var(--whatsapp-foreground);
   --color-success: var(--success);
@@ -57,47 +72,114 @@
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.992 0.004 95);
-  --foreground: oklch(0.28 0.025 150);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.28 0.025 150);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.28 0.025 150);
-  --primary: oklch(0.56 0.055 150);
-  --primary-foreground: oklch(0.99 0.004 95);
-  --sage-deep: oklch(0.38 0.04 152);
-  --secondary: oklch(0.95 0.022 85);
-  --secondary-foreground: oklch(0.32 0.03 70);
-  --sand: oklch(0.93 0.03 82);
-  --muted: oklch(0.965 0.012 90);
-  --muted-foreground: oklch(0.5 0.02 150);
-  --accent: oklch(0.93 0.03 145);
-  --accent-foreground: oklch(0.32 0.04 152);
-  --destructive: oklch(0.58 0.17 28);
-  --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.6 0.11 150);
-  --warning: oklch(0.72 0.13 75);
-  --info: oklch(0.6 0.08 230);
-  --whatsapp: oklch(0.68 0.16 150);
-  --whatsapp-foreground: oklch(1 0 0);
-  --border: oklch(0.91 0.015 95);
-  --input: oklch(0.89 0.015 95);
-  --ring: oklch(0.56 0.055 150);
-  --chart-1: oklch(0.56 0.055 150);
-  --chart-2: oklch(0.75 0.06 80);
-  --chart-3: oklch(0.45 0.04 152);
-  --chart-4: oklch(0.82 0.05 120);
-  --chart-5: oklch(0.65 0.08 60);
-  --sidebar: oklch(0.975 0.01 95);
-  --sidebar-foreground: oklch(0.28 0.025 150);
-  --sidebar-primary: oklch(0.56 0.055 150);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.93 0.03 145);
-  --sidebar-accent-foreground: oklch(0.32 0.04 152);
-  --sidebar-border: oklch(0.91 0.015 95);
-  --sidebar-ring: oklch(0.56 0.055 150);
-  --shadow-soft: 0 20px 50px -24px oklch(0.38 0.04 152 / 0.25);
-  --gradient-hero: linear-gradient(160deg, oklch(0.97 0.02 85) 0%, oklch(0.99 0.004 95) 55%, oklch(0.95 0.025 145) 100%);
+
+  /* Luxury Editorial Core Palette */
+  --charcoal: #1F1F21;
+  --ivory: #F7F4ED;
+  --gold: #C5A25D;
+  --wine: #5C2A3A;
+  --smoke: #A29C92;
+
+  /* Base: Ivory background with Charcoal text */
+  --background: #F7F4ED;
+  --foreground: #1F1F21;
+
+  --card: #FCFAF6;
+  --card-foreground: #1F1F21;
+  --popover: #FCFAF6;
+  --popover-foreground: #1F1F21;
+
+  /* Main buttons: Gold with Charcoal text */
+  --primary: #C5A25D;
+  --primary-foreground: #1F1F21;
+
+  /* Distinctive heading and accent tone: Wine */
+  --sage-deep: #5C2A3A;
+
+  /* Soft secondary surfaces */
+  --secondary: #EDE7DC;
+  --secondary-foreground: #1F1F21;
+  --sand: #EDE7DC;
+
+  /* Muted background and high-contrast readable muted text */
+  --muted: #EAE3D6;
+  --muted-foreground: #5C5851;
+
+  /* Accents */
+  --accent: #E8E0D0;
+  --accent-foreground: #5C2A3A;
+
+  --destructive: #8B2635;
+  --destructive-foreground: #FFFFFF;
+  --success: #325A41;
+  --warning: #C5A25D;
+  --info: #2E4C63;
+  --whatsapp: #25D366;
+  --whatsapp-foreground: #FFFFFF;
+
+  /* Borders & inputs: refined Smoke border */
+  --border: #DDD6C9;
+  --input: #D4CCC0;
+  --ring: #C5A25D;
+
+  /* Charts: Gold, Wine, Charcoal, Smoke, Bronze */
+  --chart-1: #C5A25D;
+  --chart-2: #5C2A3A;
+  --chart-3: #1F1F21;
+  --chart-4: #A29C92;
+  --chart-5: #8C6A3B;
+
+  /* Admin & Sidebar: Luxury dark Charcoal with Gold details and Ivory text */
+  --sidebar: #1F1F21;
+  --sidebar-foreground: #F7F4ED;
+  --sidebar-primary: #C5A25D;
+  --sidebar-primary-foreground: #1F1F21;
+  --sidebar-accent: #2C2C2F;
+  --sidebar-accent-foreground: #F7F4ED;
+  --sidebar-border: #333336;
+  --sidebar-ring: #C5A25D;
+
+  --shadow-soft: 0 20px 45px -20px rgba(31, 31, 33, 0.12);
+  --gradient-hero: linear-gradient(160deg, #F4EEE2 0%, #F7F4ED 55%, #EFE8DA 100%);
+}
+
+.dark {
+  --background: #1F1F21;
+  --foreground: #F7F4ED;
+  --card: #27272A;
+  --card-foreground: #F7F4ED;
+  --popover: #27272A;
+  --popover-foreground: #F7F4ED;
+  --primary: #C5A25D;
+  --primary-foreground: #1F1F21;
+  --sage-deep: #D4A5B3;
+  --secondary: #2C2C30;
+  --secondary-foreground: #F7F4ED;
+  --sand: #2C2C30;
+  --muted: #2A2A2E;
+  --muted-foreground: #B5AFA6;
+  --accent: #36363B;
+  --accent-foreground: #C5A25D;
+  --destructive: #A33343;
+  --destructive-foreground: #FFFFFF;
+  --border: #38383D;
+  --input: #38383D;
+  --ring: #C5A25D;
+
+  --chart-1: #C5A25D;
+  --chart-2: #8E4B5F;
+  --chart-3: #F7F4ED;
+  --chart-4: #A29C92;
+  --chart-5: #D8BD80;
+
+  --sidebar: #19191B;
+  --sidebar-foreground: #F7F4ED;
+  --sidebar-primary: #C5A25D;
+  --sidebar-primary-foreground: #1F1F21;
+  --sidebar-accent: #27272A;
+  --sidebar-accent-foreground: #F7F4ED;
+  --sidebar-border: #333337;
+  --sidebar-ring: #C5A25D;
 }
 
 @layer base {
@@ -141,14 +223,16 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--color-wine);
 }
 
 @utility prose-artigo {
-  & h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--sage-deep); }
+  & h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--color-wine); }
   & p { line-height: 1.85; margin-bottom: 1.1rem; }
   & ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 1.1rem; }
   & li { margin-bottom: 0.4rem; line-height: 1.7; }
+  & a { color: var(--color-wine); text-decoration: underline; text-underline-offset: 4px; }
+  & a:hover { color: var(--color-wine-hover); }
 }
 
 @utility fade-up {

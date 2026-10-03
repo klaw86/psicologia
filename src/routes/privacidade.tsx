@@ -30,7 +30,7 @@ function Privacidade() {
       <section className="container-site mt-16 max-w-3xl space-y-8">
         {SECOES.map(([t, x]) => (
           <div key={t}>
-            <h2 className="text-2xl text-sage-deep">{t}</h2>
+            <h2 className="text-2xl text-wine font-medium">{t}</h2>
             <p className="mt-2 leading-relaxed text-muted-foreground">{x}</p>
           </div>
         ))}

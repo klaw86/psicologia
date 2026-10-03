@@ -62,9 +62,9 @@ function Contato() {
       <section className="container-site mt-16 grid gap-12 md:grid-cols-2">
         <div className="space-y-5">
           {itens.map(({ icon: I, t }) => (
-            <p key={t} className="flex gap-3"><I className="mt-0.5 h-5 w-5 shrink-0 text-primary" /> {t}</p>
+            <p key={t} className="flex gap-3"><I className="mt-0.5 h-5 w-5 shrink-0 text-gold" /> {t}</p>
           ))}
-          <Button asChild className="rounded-full bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90">
+          <Button asChild className="rounded-full bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90 shadow-sm">
             <a href={whatsappLink()} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 h-4 w-4" />Chamar no WhatsApp</a>
           </Button>
         </div>
@@ -81,7 +81,7 @@ function Contato() {
             <Textarea id="mensagem" rows={5} value={f.mensagem} onChange={(e) => setF({ ...f, mensagem: e.target.value })} maxLength={1000} />
             {erros["mensagem"] && <p className="text-sm text-destructive">{erros["mensagem"]}</p>}
           </div>
-          <Button type="submit" className="rounded-full" disabled={enviando}>{enviando ? "Enviando…" : "Enviar mensagem"}</Button>
+          <Button type="submit" className="rounded-full bg-gold text-charcoal hover:bg-gold-hover font-medium shadow-sm" disabled={enviando}>{enviando ? "Enviando…" : "Enviar mensagem"}</Button>
         </form>
       </section>
     </SiteLayout>

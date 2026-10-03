@@ -39,9 +39,9 @@ export function inicioDaSemana(dia: string) {
 }
 
 export const STATUS = {
-  solicitado: { label: "Solicitado", cls: "bg-warning/15 text-secondary-foreground border-warning/40" },
-  confirmado: { label: "Confirmado", cls: "bg-primary/15 text-sage-deep border-primary/40" },
-  realizado: { label: "Realizado", cls: "bg-info/15 text-foreground border-info/40" },
+  solicitado: { label: "Solicitado", cls: "bg-accent text-wine border-border" },
+  confirmado: { label: "Confirmado", cls: "bg-primary/20 text-charcoal border-primary/50 font-medium" },
+  realizado: { label: "Realizado", cls: "bg-secondary text-foreground border-border" },
   cancelado: { label: "Cancelado", cls: "bg-muted text-muted-foreground border-border line-through" },
   faltou: { label: "Faltou", cls: "bg-destructive/15 text-destructive border-destructive/40" },
 } as const;

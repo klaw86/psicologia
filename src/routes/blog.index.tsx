@@ -25,9 +25,9 @@ function Blog() {
       <PageHeader eyebrow="Blog" titulo="Leituras para cuidar de si" />
       <section className="container-site mt-16 grid gap-6 md:grid-cols-2">
         {data.map((a) => (
-          <Link key={a.id} to="/blog/$slug" params={{ slug: a.slug }} className="group rounded-3xl border border-border bg-card p-8 transition hover:shadow-soft">
+          <Link key={a.id} to="/blog/$slug" params={{ slug: a.slug }} className="group rounded-3xl border border-border bg-card p-8 transition hover:shadow-soft hover:border-gold/40">
             <p className="eyebrow">{a.categoria}</p>
-            <h2 className="mt-3 text-2xl text-sage-deep group-hover:text-primary">{a.titulo}</h2>
+            <h2 className="mt-3 text-2xl text-wine font-medium group-hover:text-gold transition-colors">{a.titulo}</h2>
             <p className="mt-3 text-muted-foreground">{a.resumo}</p>
             {a.publicado_em && <p className="mt-5 text-xs text-muted-foreground">{fmtData(a.publicado_em)}</p>}
           </Link>

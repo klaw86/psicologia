@@ -97,12 +97,12 @@ export function BookingForm() {
   if (enviado)
     return (
       <div className="rounded-3xl border border-border bg-card p-10 text-center shadow-soft">
-        <CheckCircle2 className="mx-auto h-12 w-12 text-primary" />
-        <h2 className="mt-4 text-2xl text-sage-deep">Solicitação enviada!</h2>
+        <CheckCircle2 className="mx-auto h-12 w-12 text-gold" />
+        <h2 className="mt-4 text-2xl text-wine font-medium">Solicitação enviada!</h2>
         <p className="mt-3 text-muted-foreground">
           Recebemos seu pedido para {fmtData(enviado, { weekday: "long", day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" })}. Você receberá a confirmação em breve.
         </p>
-        <Button className="mt-6 rounded-full" variant="outline" onClick={() => { setEnviado(null); setForm({ ...form, inicio: "", mensagem: "" }); }}>
+        <Button className="mt-6 rounded-full border-border text-foreground hover:bg-secondary hover:text-wine font-medium" variant="outline" onClick={() => { setEnviado(null); setForm({ ...form, inicio: "", mensagem: "" }); }}>
           Fazer nova solicitação
         </Button>
       </div>
@@ -125,7 +125,7 @@ export function BookingForm() {
           <div className="grid grid-cols-2 gap-2">
             {(["presencial", "online"] as const).map((m) => (
               <button type="button" key={m} onClick={() => set("modalidade", m)}
-                className={cn("rounded-xl border px-4 py-2.5 text-sm capitalize transition", form.modalidade === m ? "border-primary bg-accent text-accent-foreground font-semibold" : "border-input hover:bg-muted")}>
+                className={cn("rounded-xl border px-4 py-2.5 text-sm capitalize transition cursor-pointer", form.modalidade === m ? "border-gold bg-accent text-wine font-semibold shadow-xs" : "border-input hover:bg-muted text-foreground")}>
                 {m}
               </button>
             ))}
@@ -138,7 +138,7 @@ export function BookingForm() {
         <div className="flex gap-2 overflow-x-auto pb-2">
           {dias.map((d) => (
             <button type="button" key={d} onClick={() => { setDia(d); set("inicio", ""); }}
-              className={cn("flex min-w-16 flex-col items-center rounded-xl border px-3 py-2 text-sm transition", d === dia ? "border-primary bg-primary text-primary-foreground" : "border-input hover:bg-muted")}>
+              className={cn("flex min-w-16 flex-col items-center rounded-xl border px-3 py-2 text-sm transition cursor-pointer", d === dia ? "border-gold bg-gold text-charcoal font-semibold shadow-xs" : "border-input hover:bg-muted text-foreground")}>
               <span className="text-[11px] uppercase">{fmtData(d + "T12:00:00-04:00", { weekday: "short" })}</span>
               <span className="text-lg font-semibold">{d.slice(8)}</span>
               <span className="text-[11px]">{fmtData(d + "T12:00:00-04:00", { month: "short" })}</span>
@@ -155,7 +155,7 @@ export function BookingForm() {
           <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
             {horarios.map((iso) => (
               <button type="button" key={iso} onClick={() => set("inicio", iso)}
-                className={cn("rounded-lg border py-2 text-sm transition", form.inicio === iso ? "border-primary bg-primary text-primary-foreground" : "border-input hover:bg-muted")}>
+                className={cn("rounded-lg border py-2 text-sm transition cursor-pointer", form.inicio === iso ? "border-gold bg-gold text-charcoal font-semibold shadow-xs" : "border-input hover:bg-muted text-foreground")}>
                 {fmtData(iso, { hour: "2-digit", minute: "2-digit" })}
               </button>
             ))}
@@ -169,7 +169,7 @@ export function BookingForm() {
       </Campo>
 
       <p className="text-xs text-muted-foreground">Seus dados são usados apenas para o contato sobre a consulta, conforme a Política de Privacidade.</p>
-      <Button type="submit" size="lg" className="rounded-full" disabled={enviando}>{enviando ? "Enviando…" : "Solicitar agendamento"}</Button>
+      <Button type="submit" size="lg" className="rounded-full bg-gold text-charcoal hover:bg-gold-hover font-medium shadow-sm" disabled={enviando}>{enviando ? "Enviando…" : "Solicitar agendamento"}</Button>
     </form>
   );
 }

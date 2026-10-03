@@ -32,9 +32,9 @@ function Sobre() {
           <p>Comecei na Psicologia movida pela curiosidade sobre o que nos faz sofrer e, principalmente, sobre o que nos ajuda a seguir. Ao longo de mais de uma década de clínica, aprendi que cada pessoa traz um caminho único — e que o cuidado precisa respeitar isso.</p>
           <p>Minha abordagem principal é a Terapia Cognitivo-Comportamental (TCC), integrada a práticas de atenção plena. Trabalho de forma colaborativa: construímos juntos objetivos, compreensões e estratégias para o seu dia a dia.</p>
           <p>Atendo adolescentes a partir de 16 anos e adultos, presencialmente em {SITE.cidade} e online para todo o Brasil.</p>
-          <h2 className="pt-4 text-2xl text-sage-deep">Formação</h2>
+          <h2 className="pt-4 text-2xl text-wine font-medium">Formação</h2>
           <ul className="space-y-2">
-            {FORMACAO.map((f) => <li key={f} className="border-l-2 border-primary/50 pl-4">{f}</li>)}
+            {FORMACAO.map((f) => <li key={f} className="border-l-2 border-gold pl-4">{f}</li>)}
           </ul>
         </div>
       </section>
