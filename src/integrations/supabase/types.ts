@@ -14,16 +14,255 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agendamentos: {
+        Row: {
+          created_at: string
+          duracao_min: number
+          email: string
+          id: string
+          inicio: string
+          mensagem: string | null
+          modalidade: string
+          nome: string
+          notas: string | null
+          paciente_id: string | null
+          status: Database["public"]["Enums"]["status_agendamento"]
+          telefone: string
+        }
+        Insert: {
+          created_at?: string
+          duracao_min?: number
+          email: string
+          id?: string
+          inicio: string
+          mensagem?: string | null
+          modalidade: string
+          nome: string
+          notas?: string | null
+          paciente_id?: string | null
+          status?: Database["public"]["Enums"]["status_agendamento"]
+          telefone: string
+        }
+        Update: {
+          created_at?: string
+          duracao_min?: number
+          email?: string
+          id?: string
+          inicio?: string
+          mensagem?: string | null
+          modalidade?: string
+          nome?: string
+          notas?: string | null
+          paciente_id?: string | null
+          status?: Database["public"]["Enums"]["status_agendamento"]
+          telefone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agendamentos_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      artigos: {
+        Row: {
+          categoria: string
+          conteudo: string
+          created_at: string
+          id: string
+          publicado: boolean
+          publicado_em: string | null
+          resumo: string
+          slug: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          categoria?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          publicado?: boolean
+          publicado_em?: string | null
+          resumo?: string
+          slug: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          publicado?: boolean
+          publicado_em?: string | null
+          resumo?: string
+          slug?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      depoimentos: {
+        Row: {
+          aprovado: boolean
+          autor: string
+          created_at: string
+          id: string
+          texto: string
+        }
+        Insert: {
+          aprovado?: boolean
+          autor: string
+          created_at?: string
+          id?: string
+          texto: string
+        }
+        Update: {
+          aprovado?: boolean
+          autor?: string
+          created_at?: string
+          id?: string
+          texto?: string
+        }
+        Relationships: []
+      }
+      disponibilidade: {
+        Row: {
+          ativo: boolean
+          dia_semana: number
+          hora_fim: string
+          hora_inicio: string
+          id: string
+        }
+        Insert: {
+          ativo?: boolean
+          dia_semana: number
+          hora_fim: string
+          hora_inicio: string
+          id?: string
+        }
+        Update: {
+          ativo?: boolean
+          dia_semana?: number
+          hora_fim?: string
+          hora_inicio?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      mensagens_contato: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          lida: boolean
+          mensagem: string
+          nome: string
+          telefone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          lida?: boolean
+          mensagem: string
+          nome: string
+          telefone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          lida?: boolean
+          mensagem?: string
+          nome?: string
+          telefone?: string | null
+        }
+        Relationships: []
+      }
+      pacientes: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          data_nascimento: string | null
+          email: string | null
+          id: string
+          modalidade_preferida: string
+          nome: string
+          observacoes: string | null
+          telefone: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          data_nascimento?: string | null
+          email?: string | null
+          id?: string
+          modalidade_preferida?: string
+          nome: string
+          observacoes?: string | null
+          telefone?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          data_nascimento?: string | null
+          email?: string | null
+          id?: string
+          modalidade_preferida?: string
+          nome?: string
+          observacoes?: string | null
+          telefone?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      horarios_ocupados: {
+        Args: { _ate: string; _de: string }
+        Returns: string[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      status_agendamento:
+        | "solicitado"
+        | "confirmado"
+        | "realizado"
+        | "cancelado"
+        | "faltou"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +389,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      status_agendamento: [
+        "solicitado",
+        "confirmado",
+        "realizado",
+        "cancelado",
+        "faltou",
+      ],
+    },
   },
 } as const
