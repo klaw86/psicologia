@@ -1,6 +1,6 @@
 # Manual de Configuração do Supabase, Autenticação & IA (SETUP)
 
-Este guia explica em passos simples como aplicar a estrutura de segurança, criar o usuário administrador oficial e configurar a Edge Function de Inteligência Artificial (`ai-assist`).
+Este guia explica em passos simples como acessar o painel administrativo através da sua **Conta Google**, via **Link Mágico sem senha** ou com **e-mail e senha**.
 
 ---
 
@@ -16,50 +16,54 @@ As migrations criam a estrutura do CMS, mídias e a segurança de acesso restrit
 4. Execute primeiro o arquivo:
    - [`supabase/migrations/20261004010000_site_cms_and_ai.sql`](supabase/migrations/20261004010000_site_cms_and_ai.sql) *(Tabelas do CMS, Mídias e Conteúdo inicial)*
 5. Em seguida, crie outra query e execute o arquivo de segurança:
-   - [`supabase/migrations/20261004020000_admin_auth_and_roles.sql`](supabase/migrations/20261004020000_admin_auth_and_roles.sql) *(Papéis, restrição exclusiva para `klaw.com@gmail.com` e trigger automático)*
+   - [`supabase/migrations/20261004020000_admin_auth_and_roles.sql`](supabase/migrations/20261004020000_admin_auth_and_roles.sql) *(Papéis, restrição exclusiva para `klaw.com@gmail.com`, trigger e função `claim_admin_role`)*
 6. O Supabase confirmará com sucesso (`Success. No rows returned`).
 
 ---
 
-## 2. Primeiro Acesso: Criar o Usuário Administrador e Definir a Senha
+## 2. Como Acessar o Painel Sem Precisar de Senha
 
-O e-mail oficial do administrador do sistema é: **`klaw.com@gmail.com`**.
+O e-mail oficial do administrador é: **`klaw.com@gmail.com`**.
 
-Por segurança, **não existe cadastro público** na página de login do site. A criação da conta e definição da senha inicial são feitas de forma 100% segura diretamente pelo painel do Supabase:
+Na tela `/login` (ou clicando no botão **"Área restrita"** no rodapé ou no menu), você tem 3 opções de acesso:
 
-### Como criar a conta e definir a senha:
+### Opção A (Recomendada): Entrar com a Conta Google
+1. Na tela de login, clique no botão branco **"Entrar com a Conta Google"**.
+2. Selecione a sua conta Google **`klaw.com@gmail.com`**.
+3. O Supabase autentica a conta e o sistema reconhece automaticamente o papel de administrador, redirecionando você direto para o painel `/admin`!
 
-1. No painel do seu projeto no Supabase, clique em **Authentication** (ícone de cadeado/usuários no menu lateral esquerdo).
-2. Na aba **Users**, clique no botão **Add user** (canto superior direito) e selecione **Create user**.
-3. Preencha os campos:
+> **Como ativar o Google OAuth no Supabase (se ainda não estiver ativo):**
+> 1. No Supabase Dashboard, acesse **Authentication** -> **Providers** -> **Google**.
+> 2. Marque **Enable Google provider**.
+> 3. No [Google Cloud Console](https://console.cloud.google.com/apis/credentials), crie uma credencial OAuth 2.0 (Tipo: Aplicação Web).
+> 4. Copie a **Authorized redirect URI** do Supabase (`https://<seu-projeto>.supabase.co/auth/v1/callback`) e cole no Google Cloud.
+> 5. Cole o **Client ID** e **Client Secret** no Supabase e clique em **Save**.
+
+---
+
+### Opção B (Acesso Instantâneo Sem Senha): Link Mágico no E-mail
+Se você não tem senha e ainda não configurou as chaves do Google:
+1. Na tela `/login`, clique no botão cinza **"Acessar via Link no E-mail (Sem Senha)"**.
+2. O sistema enviará imediatamente um e-mail para **`klaw.com@gmail.com`**.
+3. Abra sua caixa de entrada (ou spam) no Gmail e clique no botão de login da mensagem do Supabase.
+4. Você será redirecionado para o site **já logado com sucesso**, sem precisar de senha!
+
+---
+
+### Opção C: Definir uma Senha Manual no Painel do Supabase
+Se você preferir definir uma senha fixa:
+1. No Supabase Dashboard, clique em **Authentication** -> **Users**.
+2. Clique no botão **Add user** -> **Create user**.
+3. Preencha:
    - **Email:** `klaw.com@gmail.com`
-   - **Password:** Digite a senha forte que deseja utilizar para acessar o painel administrativo.
-   - **Auto Confirm User?:** Marque esta caixa como **Ativada (Yes)** para que o e-mail já fique confirmado imediatamente, sem depender de confirmação por link.
+   - **Password:** Escolha sua senha.
+   - **Auto Confirm User?:** Marque **Sim (Yes)**.
 4. Clique em **Create user**.
-5. **Pronto!** O gatilho de segurança do banco de dados (`on_auth_user_created_assign_role`) atribuirá automaticamente o papel `admin` na tabela `user_roles` exclusivamente para este e-mail.
+5. Agora você pode entrar na tela `/login` informando esse e-mail e essa senha.
 
 ---
 
-## 3. Como Acessar o Painel no Site
-
-1. Abra o site no navegador:
-   - Acesse diretamente: `http://localhost:8080/login` (ou o domínio publicado).
-   - Ou clique no botão discreto **"Área restrita"** localizado no canto inferior do rodapé ou dentro do menu.
-2. Na tela de login:
-   - Informe o e-mail: `klaw.com@gmail.com`
-   - Digite a senha definida no passo anterior.
-   - Clique em **"Entrar no Painel"**.
-3. O sistema valida as credenciais e confirma o papel `admin` no banco via RLS.
-4. Você será redirecionado imediatamente para o painel de gerenciamento (`/admin`).
-5. Enquanto você estiver logado:
-   - O menu e o rodapé exibirão as opções **"Painel"** (para voltar ao CMS) e **"Sair"** (para encerrar a sessão com segurança).
-
-### Esqueci minha senha:
-Caso precise recuperar o acesso futuramente, na tela `/login` clique em **"Esqueci minha senha"**, informe `klaw.com@gmail.com` e o Supabase enviará um link de redefinição seguro para a sua caixa de entrada.
-
----
-
-## 4. Configurar a Chave de Inteligência Artificial (Edge Function)
+## 3. Configurar a Chave de Inteligência Artificial (Edge Function)
 
 A Edge Function `ai-assist` permite gerar textos éticos, reescrever conteúdos e criar imagens profissionais diretamente no Editor Visual (`/admin/editor`).
 
@@ -77,17 +81,10 @@ A chave de IA **nunca** fica exposta no código-fonte nem no front-end. Ela deve
 npx supabase secrets set OPENAI_API_KEY=sua_chave_aqui
 ```
 
-### Conformidade Ética (Código de Ética do Psicólogo - CFP):
-- **Sem promessa de cura ou resultados:** Vedado por normas profissionais.
-- **Sem depoimentos de pacientes reais:** Vedado pelo CFP.
-- **Linguagem acolhedora e científica:** Tom humanizado e reflexivo.
-- **Orientações para situações de crise:** Indicação do CVV (188) e emergências.
-
 ---
 
-## 5. Segurança do Sistema
+## 4. Segurança do Sistema
 
-- **Restrição a nível de banco:** Mesmo que alguém tente alterar papéis via API, a trigger `check_admin_role_restriction` impede a atribuição de `admin` para qualquer usuário que não possua o e-mail `klaw.com@gmail.com`.
-- **Rotas protegidas:** Todas as rotas `/admin` (`/admin`, `/admin/ajustes`, `/admin/editor`) são blindadas por verificação de autenticação e papel. Usuários sem login ou com papel `demo`/`user` são redirecionados imediatamente para `/login`.
-- **Privacidade e SEO:** Tanto a página `/login` quanto todas as páginas `/admin` possuem metatag `noindex, nofollow` e estão bloqueadas no arquivo `public/robots.txt`.
-- **Sem cadastro público:** Visitantes comuns não conseguem criar contas no site.
+- **Restrição exclusiva no banco:** A trigger `check_admin_role_restriction` e a função RPC `claim_admin_role` garantem que nenhuma outra conta ou e-mail receba privilégios de administrador além de `klaw.com@gmail.com`.
+- **Rotas protegidas:** As rotas `/admin`, `/admin/ajustes` e `/admin/editor` possuem guarda de autenticação ativo. Usuários não autenticados ou com outras contas são impedidos e redirecionados para `/login`.
+- **Privacidade e SEO:** As telas `/login` e `/admin/*` possuem metatag `noindex, nofollow` e bloqueio explícito no `public/robots.txt`.

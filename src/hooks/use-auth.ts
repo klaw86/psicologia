@@ -20,6 +20,13 @@ export function useAuth(): AuthState {
 
   const checkRoles = useCallback(async (userId: string) => {
     try {
+      // Se a função claim_admin_role existir, garante a inserção imediata para klaw.com@gmail.com
+      try {
+        await (supabase.rpc as any)("claim_admin_role");
+      } catch {
+        // Fallback silencioso se a RPC ainda não tiver sido criada
+      }
+
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")

@@ -118,3 +118,23 @@ select id, 'admin'::public.app_role
 from auth.users
 where lower(email) = 'klaw.com@gmail.com'
 on conflict (user_id, role) do nothing;
+
+-- 8. Função RPC segura para confirmar o papel de admin após login via Google OAuth ou Magic Link
+create or replace function public.claim_admin_role()
+returns boolean language plpgsql security definer set search_path = public as $$
+declare
+  v_email text;
+begin
+  select lower(email) into v_email from auth.users where id = auth.uid();
+  if v_email = 'klaw.com@gmail.com' then
+    insert into public.user_roles (user_id, role)
+    values (auth.uid(), 'admin')
+    on conflict (user_id, role) do nothing;
+    return true;
+  end if;
+  return false;
+end;
+$$;
+
+grant execute on function public.claim_admin_role() to authenticated;
+
