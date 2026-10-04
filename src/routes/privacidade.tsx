@@ -16,21 +16,28 @@ export const Route = createFileRoute("/privacidade")({
   component: Privacidade,
 });
 
-const SECOES = [
-  ["Dados coletados", "Coletamos nome, e-mail, telefone, modalidade, data desejada e a mensagem opcional enviada nos formulários de agendamento e contato."],
-  ["Finalidade", "Os dados são utilizados exclusivamente para contato, agendamento e organização dos atendimentos. Não são vendidos nem compartilhados com terceiros para fins comerciais."],
-  ["Sigilo profissional", "Informações clínicas seguem o Código de Ética Profissional do Psicólogo e são mantidas sob sigilo."],
-  ["Armazenamento e segurança", "Os dados ficam em ambiente protegido, com acesso restrito à profissional responsável."],
-  ["Seus direitos (LGPD)", "Você pode solicitar acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail de contato."],
-  ["Contato", `Dúvidas sobre esta política: ${SITE.email}.`],
-];
+import { usePageContent, useSiteSettings } from "@/hooks/use-public-data";
 
 function Privacidade() {
+  const site = useSiteSettings();
+  const { getBlock } = usePageContent("privacidade");
+  const eyebrow = getBlock("header", "eyebrow", "Transparência");
+  const titulo = getBlock("header", "titulo", "Política de Privacidade");
+
+  const secoes = [
+    ["Dados coletados", "Coletamos nome, e-mail, telefone, modalidade, data desejada e a mensagem opcional enviada nos formulários de agendamento e contato."],
+    ["Finalidade", "Os dados são utilizados exclusivamente para contato, agendamento e organização dos atendimentos. Não são vendidos nem compartilhados com terceiros para fins comerciais."],
+    ["Sigilo profissional", "Informações clínicas seguem o Código de Ética Profissional do Psicólogo e são mantidas sob sigilo."],
+    ["Armazenamento e segurança", "Os dados ficam em ambiente protegido, com acesso restrito à profissional responsável."],
+    ["Seus direitos (LGPD)", "Você pode solicitar acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail de contato."],
+    ["Contato", `Dúvidas sobre esta política: ${site.email}.`],
+  ];
+
   return (
     <SiteLayout>
-      <PageHeader eyebrow="Transparência" titulo="Política de Privacidade" texto={`Última atualização: outubro de 2026. ${SITE.aviso}.`} />
+      <PageHeader eyebrow={eyebrow} titulo={titulo} texto={`Última atualização: outubro de 2026. ${site.aviso}.`} />
       <section className="container-site mt-16 max-w-3xl space-y-8">
-        {SECOES.map(([t, x]) => (
+        {secoes.map(([t, x]) => (
           <div key={t}>
             <h2 className="text-2xl text-wine font-medium">{t}</h2>
             <p className="mt-2 leading-relaxed text-muted-foreground">{x}</p>

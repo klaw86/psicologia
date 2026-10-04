@@ -238,6 +238,140 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          id: string
+          secao: string
+          chave: string
+          valor: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          secao: string
+          chave: string
+          valor: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          secao?: string
+          chave?: string
+          valor?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_blocks: {
+        Row: {
+          id: string
+          pagina: string
+          secao: string
+          chave: string
+          tipo: string
+          valor: Json
+          ordem: number
+          visivel: boolean
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          pagina: string
+          secao: string
+          chave: string
+          tipo?: string
+          valor: Json
+          ordem?: number
+          visivel?: boolean
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          pagina?: string
+          secao?: string
+          chave?: string
+          tipo?: string
+          valor?: Json
+          ordem?: number
+          visivel?: boolean
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      media: {
+        Row: {
+          id: string
+          url: string
+          alt: string | null
+          tamanho: number | null
+          tipo: string | null
+          criado_em: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          url: string
+          alt?: string | null
+          tamanho?: number | null
+          tipo?: string | null
+          criado_em?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          url?: string
+          alt?: string | null
+          tamanho?: number | null
+          tipo?: string | null
+          criado_em?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      content_versions: {
+        Row: {
+          id: string
+          content_block_id: string
+          valor: Json
+          status: string
+          alterado_por: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          content_block_id: string
+          valor: Json
+          status?: string
+          alterado_por?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          content_block_id?: string
+          valor?: Json
+          status?: string
+          alterado_por?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_versions_content_block_id_fkey"
+            columns: ["content_block_id"]
+            isOneToOne: false
+            referencedRelation: "content_blocks"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

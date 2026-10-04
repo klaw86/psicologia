@@ -33,7 +33,16 @@ const schema = z.object({
   mensagem: z.string().trim().min(5, "Escreva sua mensagem").max(1000),
 });
 
+import { usePageContent, useSiteSettings } from "@/hooks/use-public-data";
+
 function Contato() {
+  const site = useSiteSettings();
+  const { getBlock } = usePageContent("contato");
+
+  const headerEyebrow = getBlock("header", "eyebrow", "Contato");
+  const headerTitulo = getBlock("header", "titulo", "Vamos conversar?");
+  const headerTexto = getBlock("header", "texto", "Tire suas dúvidas ou envie uma mensagem. Respondo em até um dia útil.");
+
   const vazio = { nome: "", email: "", telefone: "", mensagem: "" };
   const [f, setF] = useState(vazio);
   const [erros, setErros] = useState<Record<string, string>>({});
@@ -53,28 +62,30 @@ function Contato() {
   }
 
   const itens = [
-    { icon: MapPin, t: SITE.endereco },
-    { icon: Phone, t: SITE.telefone },
-    { icon: Mail, t: SITE.email },
-    { icon: Clock, t: SITE.horario },
+    { icon: MapPin, t: site.endereco },
+    { icon: Phone, t: site.telefone },
+    { icon: Mail, t: site.email },
+    { icon: Clock, t: site.horario },
   ];
+
+  const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Olá! Gostaria de informações sobre consultas.")}`;
 
   return (
     <SiteLayout>
-      <PageHeader eyebrow="Contato" titulo="Vamos conversar?" texto="Tire suas dúvidas ou envie uma mensagem. Respondo em até um dia útil." />
+      <PageHeader eyebrow={headerEyebrow} titulo={headerTitulo} texto={headerTexto} />
       <section className="container-site mt-16 grid gap-12 md:grid-cols-2">
         <div className="space-y-6">
           <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card shadow-xs">
             <img
               src={retrato}
-              alt="Dra. Helena Duarte, psicóloga clínica"
+              alt={`${site.nome}, psicóloga clínica`}
               width={200}
               height={200}
               className="h-16 w-16 rounded-full object-cover object-[50%_25%] border border-gold/40 shadow-xs"
             />
             <div>
-              <p className="font-display font-medium text-lg text-wine">{SITE.nome}</p>
-              <p className="text-xs text-muted-foreground">{SITE.titulo} · {SITE.crp}</p>
+              <p className="font-display font-medium text-lg text-wine">{site.nome}</p>
+              <p className="text-xs text-muted-foreground">{site.titulo} · {site.crp}</p>
             </div>
           </div>
           <div className="space-y-4">
@@ -83,7 +94,7 @@ function Contato() {
             ))}
           </div>
           <Button asChild className="rounded-full bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90 shadow-sm">
-            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 h-4 w-4" />Chamar no WhatsApp</a>
+            <a href={wa} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 h-4 w-4" />Chamar no WhatsApp</a>
           </Button>
         </div>
         <form onSubmit={enviar} noValidate className="grid gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">

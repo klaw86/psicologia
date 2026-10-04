@@ -18,10 +18,17 @@ export const Route = createFileRoute("/agendar")({
   component: Agendar,
 });
 
+import { usePageContent } from "@/hooks/use-public-data";
+
 function Agendar() {
+  const { getBlock } = usePageContent("agendar");
+  const eyebrow = getBlock("header", "eyebrow", "Agendamento");
+  const titulo = getBlock("header", "titulo", "Agende sua consulta");
+  const texto = getBlock("header", "texto", "Escolha a modalidade, a data e um horário livre. A confirmação é feita por WhatsApp ou e-mail.");
+
   return (
     <SiteLayout>
-      <PageHeader eyebrow="Agendamento" titulo="Agende sua consulta" texto="Escolha a modalidade, a data e um horário livre. A confirmação é feita por WhatsApp ou e-mail." />
+      <PageHeader eyebrow={eyebrow} titulo={titulo} texto={texto} />
       <section className="container-site mt-12 max-w-3xl">
         <ClientOnly fallback={<p className="text-muted-foreground">Carregando formulário…</p>}>
           <BookingForm />

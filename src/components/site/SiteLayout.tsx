@@ -3,15 +3,17 @@ import { useState, type ReactNode } from "react";
 import { Menu, X, MessageCircle, MapPin, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NAV, SITE, whatsappLink } from "@/data/site";
+import { useSiteSettings } from "@/hooks/use-public-data";
 
 function Header() {
   const [aberto, setAberto] = useState(false);
+  const site = useSiteSettings();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="container-site flex h-16 items-center justify-between">
         <Link to="/" className="flex flex-col leading-tight" onClick={() => setAberto(false)}>
-          <span className="font-display text-lg text-wine font-semibold tracking-tight">{SITE.nome}</span>
-          <span className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{SITE.titulo}</span>
+          <span className="font-display text-lg text-wine font-semibold tracking-tight">{site.nome}</span>
+          <span className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{site.titulo}</span>
         </Link>
         <nav className="hidden items-center gap-7 md:flex" aria-label="Principal">
           {NAV.map((n) => (
@@ -50,18 +52,19 @@ function Header() {
 }
 
 function Footer() {
+  const site = useSiteSettings();
   return (
     <footer className="mt-24 border-t border-[#333336] bg-charcoal text-ivory">
       <div className="container-site grid gap-10 py-14 md:grid-cols-3">
         <div>
-          <p className="font-display text-xl text-ivory font-medium">{SITE.nome}</p>
-          <p className="mt-1 text-sm text-[#C8C3BA]">{SITE.titulo} · {SITE.crp}</p>
-          <p className="mt-4 max-w-xs text-sm text-[#C8C3BA]">Atendimento presencial em {SITE.cidade} e online para todo o Brasil.</p>
+          <p className="font-display text-xl text-ivory font-medium">{site.nome}</p>
+          <p className="mt-1 text-sm text-[#C8C3BA]">{site.titulo} · {site.crp}</p>
+          <p className="mt-4 max-w-xs text-sm text-[#C8C3BA]">Atendimento presencial em {site.cidade} e online para todo o Brasil.</p>
         </div>
         <div className="space-y-2 text-sm text-[#C8C3BA]">
-          <p className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-gold" />{SITE.endereco}</p>
-          <p className="flex gap-2"><Phone className="h-4 w-4 text-gold" />{SITE.telefone}</p>
-          <p className="flex gap-2"><Mail className="h-4 w-4 text-gold" />{SITE.email}</p>
+          <p className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-gold" />{site.endereco}</p>
+          <p className="flex gap-2"><Phone className="h-4 w-4 text-gold" />{site.telefone}</p>
+          <p className="flex gap-2"><Mail className="h-4 w-4 text-gold" />{site.email}</p>
         </div>
         <div className="flex flex-col gap-2 text-sm">
           {NAV.map((n) => <Link key={n.to} to={n.to} className="text-[#C8C3BA] transition-colors hover:text-gold">{n.label}</Link>)}
@@ -69,7 +72,7 @@ function Footer() {
         </div>
       </div>
       <div className="border-t border-[#333336] py-5 text-center text-xs text-[#A29C92]">
-        <p className="font-semibold text-ivory/90">{SITE.aviso}</p>
+        <p className="font-semibold text-ivory/90">{site.aviso}</p>
         <p className="mt-1">Em caso de crise, ligue 188 (CVV) ou 192 (SAMU).</p>
       </div>
     </footer>
@@ -77,8 +80,10 @@ function Footer() {
 }
 
 function WhatsAppButton() {
+  const site = useSiteSettings();
+  const link = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Olá! Gostaria de informações sobre consultas.")}`;
   return (
-    <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp"
+    <a href={link} target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp"
       className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-whatsapp-foreground shadow-soft transition-transform hover:scale-105">
       <MessageCircle className="h-7 w-7" />
     </a>
@@ -109,6 +114,8 @@ export function PageHeader({ eyebrow, titulo, texto }: { eyebrow: string; titulo
 }
 
 export function CtaFinal() {
+  const site = useSiteSettings();
+  const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Olá! Gostaria de informações sobre consultas.")}`;
   return (
     <section className="container-site mt-24">
       <div className="rounded-3xl bg-charcoal px-6 py-14 text-center text-ivory shadow-xl md:px-16 border border-[#333336]">
@@ -119,7 +126,7 @@ export function CtaFinal() {
             <Link to="/agendar">Agendar consulta</Link>
           </Button>
           <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-gold/70 text-gold hover:bg-gold/10 hover:text-gold">
-            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+            <a href={wa} target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
           </Button>
         </div>
       </div>
