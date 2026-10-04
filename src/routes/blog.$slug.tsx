@@ -4,6 +4,7 @@ import { CtaFinal, SiteLayout } from "@/components/site/SiteLayout";
 import { Markdown } from "@/components/site/Markdown";
 import { artigoQuery } from "@/hooks/use-public-data";
 import { fmtData } from "@/lib/datas";
+import { SITE } from "@/data/site";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ context, params }) => {
@@ -15,11 +16,13 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!loaderData) return { meta: [{ title: "Artigo não encontrado" }, { name: "robots", content: "noindex" }] };
     return {
       meta: [
-        { title: `${loaderData.titulo} | Blog Dra. Maria Victória` },
+        { title: `${loaderData.titulo} | Blog ${SITE.nome}` },
         { name: "description", content: loaderData.resumo },
         { property: "og:title", content: loaderData.titulo },
         { property: "og:description", content: loaderData.resumo },
         { property: "og:type", content: "article" },
+        { property: "og:image", content: "/helena-duarte.webp" },
+        { name: "twitter:image", content: "/helena-duarte.webp" },
       ],
     };
   },

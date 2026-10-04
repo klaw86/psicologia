@@ -1,14 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaFinal, PageHeader, SiteLayout } from "@/components/site/SiteLayout";
-import { ESPECIALIDADES } from "@/data/site";
+import { ESPECIALIDADES, SITE } from "@/data/site";
 
 export const Route = createFileRoute("/especialidades")({
   head: () => ({
     meta: [
-      { title: "Especialidades | Ansiedade, depressão, luto e mais" },
+      { title: `Especialidades | ${SITE.nome}` },
       { name: "description", content: "Áreas de atuação em psicoterapia: ansiedade, depressão, luto, relacionamentos, burnout e maternidade." },
-      { property: "og:title", content: "Especialidades – Dra. Maria Victória" },
+      { property: "og:title", content: `Especialidades – ${SITE.nome}` },
       { property: "og:description", content: "Conheça as demandas atendidas na psicoterapia." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
     ],
   }),
   component: Especialidades,

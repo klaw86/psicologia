@@ -5,10 +5,12 @@ import { SITE } from "@/data/site";
 export const Route = createFileRoute("/privacidade")({
   head: () => ({
     meta: [
-      { title: "Política de Privacidade | Dra. Maria Victória" },
+      { title: `Política de Privacidade | ${SITE.nome}` },
       { name: "description", content: "Como coletamos, usamos e protegemos seus dados pessoais, em conformidade com a LGPD." },
-      { property: "og:title", content: "Política de Privacidade" },
+      { property: "og:title", content: `Política de Privacidade | ${SITE.nome}` },
       { property: "og:description", content: "Tratamento de dados pessoais conforme a LGPD." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
     ],
   }),
   component: Privacidade,

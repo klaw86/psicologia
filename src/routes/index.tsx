@@ -7,15 +7,17 @@ import { CtaFinal, SiteLayout } from "@/components/site/SiteLayout";
 import { ESPECIALIDADES, FAQ, PASSOS, SITE } from "@/data/site";
 import { depoimentosQuery } from "@/hooks/use-public-data";
 import consultorio from "@/assets/consultorio.jpg";
-import retrato from "@/assets/dra-maria.jpg";
+import retrato from "@/assets/helena-duarte.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dra. Maria Victória | Psicóloga em Lucas do Rio Verde e online" },
+      { title: `${SITE.nome} | Psicóloga em Lucas do Rio Verde e online` },
       { name: "description", content: "Psicoterapia acolhedora para ansiedade, depressão, luto e relacionamentos. Atendimento presencial em Lucas do Rio Verde/MT e online." },
-      { property: "og:title", content: "Dra. Maria Victória | Psicóloga Clínica" },
+      { property: "og:title", content: `${SITE.nome} | ${SITE.titulo}` },
       { property: "og:description", content: "Psicoterapia presencial e online. Agende sua consulta." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
     ],
   }),
   component: Index,
@@ -60,10 +62,17 @@ function Index() {
       </section>
 
       <section className="container-site mt-24 grid items-center gap-12 md:grid-cols-[2fr_3fr]">
-        <img src={retrato} alt="Retrato da Dra. Maria Victória sorrindo" width={896} height={1120} loading="lazy" className="aspect-[4/5] w-full max-w-sm rounded-3xl object-cover shadow-soft" />
+        <img
+          src={retrato}
+          alt="Dra. Helena Duarte, psicóloga clínica"
+          width={1200}
+          height={1500}
+          loading="lazy"
+          className="aspect-[4/5] w-full max-w-sm rounded-3xl object-cover object-[50%_25%] shadow-soft"
+        />
         <div>
           <p className="eyebrow">Sobre</p>
-          <h2 className="mt-3 text-3xl text-wine md:text-4xl">Olá, eu sou a Maria Victória.</h2>
+          <h2 className="mt-3 text-3xl text-wine md:text-4xl">Olá, eu sou a Helena Duarte.</h2>
           <p className="mt-5 leading-relaxed text-muted-foreground">
             Sou psicóloga clínica há mais de 10 anos e acredito que a terapia é um encontro: um lugar onde você pode ser quem é, sem julgamentos. Trabalho com a abordagem cognitivo-comportamental integrada a práticas de atenção plena.
           </p>

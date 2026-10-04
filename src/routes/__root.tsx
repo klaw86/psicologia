@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SITE } from "@/data/site";
 
 function NotFoundComponent() {
   return (
@@ -66,10 +67,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dra. Maria Victória – Psicóloga Clínica" },
-      { name: "description", content: "Psicoterapia presencial em Lucas do Rio Verde/MT e online." },
+      { title: `${SITE.nome} – ${SITE.titulo}` },
+      { name: "description", content: `Psicoterapia presencial em ${SITE.cidade} e online.` },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: `${SITE.nome} – ${SITE.titulo}` },
+      { property: "og:description", content: "Psicoterapia presencial e online. Agende sua consulta." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { property: "og:image:alt", content: "Dra. Helena Duarte, psicóloga clínica" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image:alt", content: "Dra. Helena Duarte, psicóloga clínica" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -89,10 +96,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Psychologist",
+    "name": SITE.nome,
+    "image": "/helena-duarte.webp",
+    "description": "Psicoterapia acolhedora com atendimento presencial e online.",
+    "telephone": SITE.telefone,
+    "email": SITE.email,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": SITE.endereco,
+      "addressLocality": "Lucas do Rio Verde",
+      "addressRegion": "MT",
+      "addressCountry": "BR",
+    },
+  };
+
   return (
     <html lang="pt-BR">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body>
         {children}

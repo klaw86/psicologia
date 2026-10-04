@@ -1,6 +1,7 @@
 export const SITE = {
-  nome: "Dra. Maria Victória",
+  nome: "Dra. Helena Duarte",
   titulo: "Psicóloga Clínica",
+  foto: "/helena-duarte.webp",
   crp: "CRP 00/00000",
   cidade: "Lucas do Rio Verde/MT",
   endereco: "Av. Exemplo, 1000 – Sala 00, Centro, Lucas do Rio Verde/MT",

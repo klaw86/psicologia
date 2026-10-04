@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaFinal, PageHeader, SiteLayout } from "@/components/site/SiteLayout";
 import { SITE } from "@/data/site";
-import retrato from "@/assets/dra-maria.jpg";
+import retrato from "@/assets/helena-duarte.webp";
 
 export const Route = createFileRoute("/sobre")({
   head: () => ({
     meta: [
-      { title: "Sobre a Dra. Maria Victória | Psicóloga Clínica" },
-      { name: "description", content: "Formação, abordagem e trajetória da psicóloga clínica Maria Victória, com atendimento em Lucas do Rio Verde/MT e online." },
-      { property: "og:title", content: "Sobre a Dra. Maria Victória" },
+      { title: `Sobre a ${SITE.nome} | ${SITE.titulo}` },
+      { name: "description", content: `Formação, abordagem e trajetória da psicóloga clínica ${SITE.nome}, com atendimento em Lucas do Rio Verde/MT e online.` },
+      { property: "og:title", content: `Sobre a ${SITE.nome}` },
       { property: "og:description", content: "Conheça a formação e a abordagem terapêutica." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
     ],
   }),
   component: Sobre,
@@ -27,7 +29,14 @@ function Sobre() {
     <SiteLayout>
       <PageHeader eyebrow="Sobre" titulo="Psicologia com escuta, ciência e afeto" texto={`${SITE.nome} · ${SITE.crp}`} />
       <section className="container-site mt-16 grid gap-12 md:grid-cols-[2fr_3fr]">
-        <img src={retrato} alt="Dra. Maria Victória em seu consultório" width={896} height={1120} loading="lazy" className="aspect-[4/5] w-full max-w-sm rounded-3xl object-cover shadow-soft" />
+        <img
+          src={retrato}
+          alt="Dra. Helena Duarte, psicóloga clínica"
+          width={1200}
+          height={1500}
+          loading="lazy"
+          className="aspect-[4/5] w-full max-w-sm rounded-3xl object-cover object-[50%_25%] shadow-soft"
+        />
         <div className="space-y-5 leading-relaxed text-muted-foreground">
           <p>Comecei na Psicologia movida pela curiosidade sobre o que nos faz sofrer e, principalmente, sobre o que nos ajuda a seguir. Ao longo de mais de uma década de clínica, aprendi que cada pessoa traz um caminho único — e que o cuidado precisa respeitar isso.</p>
           <p>Minha abordagem principal é a Terapia Cognitivo-Comportamental (TCC), integrada a práticas de atenção plena. Trabalho de forma colaborativa: construímos juntos objetivos, compreensões e estratégias para o seu dia a dia.</p>

@@ -3,14 +3,17 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { PageHeader, SiteLayout } from "@/components/site/SiteLayout";
 import { artigosQuery } from "@/hooks/use-public-data";
 import { fmtData } from "@/lib/datas";
+import { SITE } from "@/data/site";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Blog | Saúde emocional e psicoterapia" },
+      { title: `Blog | Saúde emocional – ${SITE.nome}` },
       { name: "description", content: "Artigos sobre ansiedade, autocuidado, luto e terapia online para cuidar da saúde emocional." },
-      { property: "og:title", content: "Blog – Dra. Maria Victória" },
+      { property: "og:title", content: `Blog – ${SITE.nome}` },
       { property: "og:description", content: "Reflexões sobre saúde emocional." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(artigosQuery),

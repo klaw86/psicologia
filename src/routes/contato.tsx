@@ -10,14 +10,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SITE, whatsappLink } from "@/data/site";
+import retrato from "@/assets/helena-duarte.webp";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({
     meta: [
-      { title: "Contato | Psicóloga em Lucas do Rio Verde/MT" },
-      { name: "description", content: "Endereço, telefone, WhatsApp e formulário de contato do consultório da Dra. Maria Victória." },
-      { property: "og:title", content: "Contato – Dra. Maria Victória" },
+      { title: `Contato | ${SITE.nome}` },
+      { name: "description", content: `Endereço, telefone, WhatsApp e formulário de contato do consultório da ${SITE.nome}.` },
+      { property: "og:title", content: `Contato – ${SITE.nome}` },
       { property: "og:description", content: "Fale com o consultório." },
+      { property: "og:image", content: "/helena-duarte.webp" },
+      { name: "twitter:image", content: "/helena-duarte.webp" },
     ],
   }),
   component: Contato,
@@ -60,10 +63,25 @@ function Contato() {
     <SiteLayout>
       <PageHeader eyebrow="Contato" titulo="Vamos conversar?" texto="Tire suas dúvidas ou envie uma mensagem. Respondo em até um dia útil." />
       <section className="container-site mt-16 grid gap-12 md:grid-cols-2">
-        <div className="space-y-5">
-          {itens.map(({ icon: I, t }) => (
-            <p key={t} className="flex gap-3"><I className="mt-0.5 h-5 w-5 shrink-0 text-gold" /> {t}</p>
-          ))}
+        <div className="space-y-6">
+          <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card shadow-xs">
+            <img
+              src={retrato}
+              alt="Dra. Helena Duarte, psicóloga clínica"
+              width={200}
+              height={200}
+              className="h-16 w-16 rounded-full object-cover object-[50%_25%] border border-gold/40 shadow-xs"
+            />
+            <div>
+              <p className="font-display font-medium text-lg text-wine">{SITE.nome}</p>
+              <p className="text-xs text-muted-foreground">{SITE.titulo} · {SITE.crp}</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            {itens.map(({ icon: I, t }) => (
+              <p key={t} className="flex gap-3"><I className="mt-0.5 h-5 w-5 shrink-0 text-gold" /> {t}</p>
+            ))}
+          </div>
           <Button asChild className="rounded-full bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90 shadow-sm">
             <a href={whatsappLink()} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 h-4 w-4" />Chamar no WhatsApp</a>
           </Button>
