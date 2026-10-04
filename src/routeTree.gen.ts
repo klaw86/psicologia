@@ -17,6 +17,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAjustesRouteImport } from './routes/admin.ajustes'
+import { Route as AdminEditorRouteImport } from './routes/admin.editor'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
@@ -60,6 +61,11 @@ const AdminAjustesRoute = AdminAjustesRouteImport.update({
   path: '/admin/ajustes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminEditorRoute = AdminEditorRouteImport.update({
+  id: '/admin/editor',
+  path: '/admin/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/privacidade': typeof PrivacidadeRoute
   '/sobre': typeof SobreRoute
   '/admin/ajustes': typeof AdminAjustesRoute
+  '/admin/editor': typeof AdminEditorRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/privacidade': typeof PrivacidadeRoute
   '/sobre': typeof SobreRoute
   '/admin/ajustes': typeof AdminAjustesRoute
+  '/admin/editor': typeof AdminEditorRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/privacidade': typeof PrivacidadeRoute
   '/sobre': typeof SobreRoute
   '/admin/ajustes': typeof AdminAjustesRoute
+  '/admin/editor': typeof AdminEditorRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/sobre'
     | '/admin/ajustes'
+    | '/admin/editor'
     | '/blog/$slug'
     | '/admin/'
     | '/blog/'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/sobre'
     | '/admin/ajustes'
+    | '/admin/editor'
     | '/blog/$slug'
     | '/admin'
     | '/blog'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/sobre'
     | '/admin/ajustes'
+    | '/admin/editor'
     | '/blog/$slug'
     | '/admin/'
     | '/blog/'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   PrivacidadeRoute: typeof PrivacidadeRoute
   SobreRoute: typeof SobreRoute
   AdminAjustesRoute: typeof AdminAjustesRoute
+  AdminEditorRoute: typeof AdminEditorRoute
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAjustesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/editor': {
+      id: '/admin/editor'
+      path: '/admin/editor'
+      fullPath: '/admin/editor'
+      preLoaderRoute: typeof AdminEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadeRoute: PrivacidadeRoute,
   SobreRoute: SobreRoute,
   AdminAjustesRoute: AdminAjustesRoute,
+  AdminEditorRoute: AdminEditorRoute,
   BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,

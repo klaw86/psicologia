@@ -519,6 +519,17 @@ function AdminAjustes() {
                 CMS /admin
               </span>
             </Link>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="hidden md:inline-flex h-8 border-gold/40 text-gold hover:bg-gold/10 text-xs"
+            >
+              <Link to="/admin/editor">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                Editor Visual & IA
+              </Link>
+            </Button>
           </div>
 
           <div className="flex items-center gap-3">

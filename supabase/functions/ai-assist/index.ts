@@ -86,17 +86,10 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { action, prompt, text, context, size } = body;
+    const { action, prompt, text, context, size, tone, targetLang } = body;
 
-    // Ação: Gerar texto
-    if (action === "generate_text") {
-      if (!prompt) {
-        return new Response(
-          JSON.stringify({ error: "Prompt não fornecido para geração de texto." }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
+    // Helper para chamadas ao Chat Completions
+    async function callChat(userContent: string, temperature = 0.7) {
       const openAiRes = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -105,75 +98,111 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
-          temperature: 0.7,
+          temperature,
           messages: [
             { role: "system", content: PSYCHOLOGY_ETHICAL_SYSTEM_PROMPT },
-            {
-              role: "user",
-              content: `Contexto / Seção: ${context || "Geral do site"}\nInstrução: ${prompt}`,
-            },
+            { role: "user", content: userContent },
           ],
         }),
       });
 
       if (!openAiRes.ok) {
         const errText = await openAiRes.text();
-        return new Response(
-          JSON.stringify({ error: "Erro na API de IA: " + errText }),
-          { status: openAiRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        throw new Error("Erro na API de IA: " + errText);
       }
 
       const data = await openAiRes.json();
-      const generatedText = data.choices?.[0]?.message?.content?.trim() || "";
-      return new Response(
-        JSON.stringify({ success: true, text: generatedText }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return data.choices?.[0]?.message?.content?.trim() || "";
+    }
+
+    // Ação: Gerar texto livre
+    if (action === "generate_text") {
+      if (!prompt) {
+        return new Response(JSON.stringify({ error: "Prompt não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const textResult = await callChat(`Contexto / Seção: ${context || "Geral do site"}\nInstrução: ${prompt}`);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     // Ação: Reescrever texto
     if (action === "rewrite_text") {
       if (!text) {
-        return new Response(
-          JSON.stringify({ error: "Texto original não fornecido para reescrita." }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Texto original não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
+      const textResult = await callChat(`Reescreva o texto a seguir com excelência editorial, tom acolhedor e ética:\n${prompt ? `Instrução: ${prompt}\n` : ""}\nTexto original:\n"""\n${text}\n"""`, 0.6);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
-      const openAiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          temperature: 0.6,
-          messages: [
-            { role: "system", content: PSYCHOLOGY_ETHICAL_SYSTEM_PROMPT },
-            {
-              role: "user",
-              content: `Reescreva o texto a seguir com excelência editorial, tom acolhedor e total conformidade ética.\n\nInstrução adicional: ${prompt || "Aprimorar clareza, empatia e refinamento estético."}\n\nTexto original:\n"""\n${text}\n"""`,
-            },
-          ],
-        }),
-      });
-
-      if (!openAiRes.ok) {
-        const errText = await openAiRes.text();
-        return new Response(
-          JSON.stringify({ error: "Erro na API de IA: " + errText }),
-          { status: openAiRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+    // Ação: Encurtar texto
+    if (action === "shorten") {
+      if (!text) {
+        return new Response(JSON.stringify({ error: "Texto não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
+      const textResult = await callChat(`Encurte e sintetize o texto a seguir mantendo os pontos essenciais, concisão e tom acolhedor:\n\n"""\n${text}\n"""`, 0.5);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
-      const data = await openAiRes.json();
-      const rewrittenText = data.choices?.[0]?.message?.content?.trim() || "";
-      return new Response(
-        JSON.stringify({ success: true, text: rewrittenText }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    // Ação: Expandir texto
+    if (action === "expand") {
+      if (!text) {
+        return new Response(JSON.stringify({ error: "Texto não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const textResult = await callChat(`Expanda e enriqueça o texto a seguir com clareza, empatia, reflexão e profundidade clínica:\n\n"""\n${text}\n"""`, 0.7);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Mudar tom
+    if (action === "change_tone") {
+      if (!text) {
+        return new Response(JSON.stringify({ error: "Texto não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const textResult = await callChat(`Reescreva o texto alterando o tom para "${tone || "mais acolhedor, humano e empático"}":\n\n"""\n${text}\n"""`, 0.6);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Corrigir gramática
+    if (action === "fix_grammar") {
+      if (!text) {
+        return new Response(JSON.stringify({ error: "Texto não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const textResult = await callChat(`Corrija a pontuação, ortografia e concordância do texto a seguir, mantendo exatamente o estilo e a mensagem:\n\n"""\n${text}\n"""`, 0.3);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Traduzir
+    if (action === "translate") {
+      if (!text) {
+        return new Response(JSON.stringify({ error: "Texto não fornecido." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const textResult = await callChat(`Traduza o seguinte texto para ${targetLang || "Inglês"}, mantendo a sensibilidade do contexto psicológico:\n\n"""\n${text}\n"""`, 0.4);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Sugerir títulos
+    if (action === "suggest_titles") {
+      const textResult = await callChat(`Sugira 5 opções de títulos refinados, éticos e envolventes para:\nTema / Conteúdo: ${prompt || text}`, 0.7);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Sugerir SEO (Título + Meta Description)
+    if (action === "suggest_seo") {
+      const textResult = await callChat(`Para o seguinte conteúdo ou página, sugira:\n1) Título SEO otimizado (50-60 caracteres)\n2) Meta Description persuasiva e ética (130-155 caracteres)\n3) 5 Palavras-chave relevantes\n\nConteúdo:\n${prompt || text}`, 0.5);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Sugerir FAQ
+    if (action === "suggest_faq") {
+      const textResult = await callChat(`Gere 3 perguntas frequentes com respostas acolhedoras e claras para pacientes de psicoterapia sobre: ${prompt || text || "Processo terapêutico"}`, 0.6);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Ação: Gerar Artigo Completo de Blog
+    if (action === "generate_article") {
+      if (!prompt) {
+        return new Response(JSON.stringify({ error: "Tema não fornecido para gerar artigo." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const textResult = await callChat(`Escreva um artigo de blog completo e informativo para pacientes, com cerca de 500 palavras em formato Markdown.\nEstrutura obrigatória:\n- Título atrativo em #\n- Introdução acolhedora\n- 3 seções explicativas com subtítulos ##\n- Conclusão com orientação para buscar apoio profissional e menção ao CVV (188) se relevante.\n\nTema solicitado: ${prompt}`, 0.7);
+      return new Response(JSON.stringify({ success: true, text: textResult }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     // Ação: Gerar imagem
@@ -193,7 +222,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: "dall-e-3",
-          prompt: `${prompt}. High quality, professional photography, warm elegant lighting, natural textures, refined psychology office ambiance.`,
+          prompt: `${prompt}. High quality, professional photography, warm soft studio lighting, natural textures, refined psychology office ambiance in ivory and charcoal tones, realistic photography, vertical 4:5 or balanced composition.`,
           n: 1,
           size: size === "portrait" ? "1024x1792" : "1024x1024",
           response_format: "url",
