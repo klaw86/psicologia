@@ -57,6 +57,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdminAuthGuard } from "@/components/admin/AdminAuthGuard";
 
 export const Route = createFileRoute("/admin/editor")({
   head: () => ({
@@ -65,8 +66,16 @@ export const Route = createFileRoute("/admin/editor")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: AdminEditor,
+  component: AdminEditorWrapper,
 });
+
+function AdminEditorWrapper() {
+  return (
+    <AdminAuthGuard>
+      <AdminEditor />
+    </AdminAuthGuard>
+  );
+}
 
 type DeviceMode = "desktop" | "tablet" | "mobile";
 type PageId = "inicio" | "sobre" | "especialidades" | "contato" | "agendar" | "privacidade" | "blog";

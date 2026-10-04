@@ -1,41 +1,69 @@
-# Manual de Configuração do Supabase & IA (SETUP)
+# Manual de Configuração do Supabase, Autenticação & IA (SETUP)
 
-Este guia explica os passos manuais necessários para aplicar a nova estrutura do CMS dinâmico no Supabase e configurar a Edge Function de Inteligência Artificial (`ai-assist`).
+Este guia explica em passos simples como aplicar a estrutura de segurança, criar o usuário administrador oficial e configurar a Edge Function de Inteligência Artificial (`ai-assist`).
 
 ---
 
-## 1. Aplicar a Migration no Supabase
+## 1. Aplicar as Migrations no Supabase
 
-Criamos uma migration completa com todas as tabelas, permissões de segurança (RLS), bucket de mídias e o conteúdo inicial (seed) do site.
+As migrations criam a estrutura do CMS, mídias e a segurança de acesso restrito ao administrador.
 
-### Como aplicar:
+### Passo a passo:
 
 1. Acesse o painel do seu projeto no **[Supabase Dashboard](https://supabase.com/dashboard)**.
 2. No menu lateral esquerdo, clique em **SQL Editor** (ícone `>_`).
 3. Clique em **New query** (Nova consulta).
-4. Abra o arquivo local:
-   - [`supabase/migrations/20261004010000_site_cms_and_ai.sql`](supabase/migrations/20261004010000_site_cms_and_ai.sql)
-5. Copie todo o conteúdo desse arquivo e cole na área de texto do SQL Editor.
-6. Clique no botão verde **Run** (Executar) no canto inferior direito.
-7. O Supabase confirmará que o script foi executado com sucesso (`Success. No rows returned`).
-
-### O que essa migration cria:
-- **`site_settings`**: Armazena identidade da psicóloga, paleta de cores (Luxury Editorial), tipografia, contatos, SEO, menu e rodapé.
-- **`content_blocks`**: Blocos de conteúdo com controle de versão, rascunho/publicado e ordenação para cada página (Início, Sobre, Especialidades, Contato, Agendar, Privacidade).
-- **`media`**: Cadastro de imagens e arquivos com dimensões, alt text descritivo e tamanho em bytes.
-- **`content_versions`**: Histórico automático de alterações em qualquer bloco de conteúdo.
-- **Bucket público `site-media`**: Bucket de armazenamento para fotos e documentos, com leitura pública e upload restrito a administradores.
-- **Seed inicial**: Preenchimento automático com todos os textos, telefones, links e fotos atuais da Dra. Helena Duarte.
+4. Execute primeiro o arquivo:
+   - [`supabase/migrations/20261004010000_site_cms_and_ai.sql`](supabase/migrations/20261004010000_site_cms_and_ai.sql) *(Tabelas do CMS, Mídias e Conteúdo inicial)*
+5. Em seguida, crie outra query e execute o arquivo de segurança:
+   - [`supabase/migrations/20261004020000_admin_auth_and_roles.sql`](supabase/migrations/20261004020000_admin_auth_and_roles.sql) *(Papéis, restrição exclusiva para `klaw.com@gmail.com` e trigger automático)*
+6. O Supabase confirmará com sucesso (`Success. No rows returned`).
 
 ---
 
-## 2. Configurar a Chave de Inteligência Artificial (Edge Function)
+## 2. Primeiro Acesso: Criar o Usuário Administrador e Definir a Senha
 
-A Edge Function `ai-assist` permite que o administrador gere textos éticos, reescreva conteúdos e gere imagens profissionais diretamente no sistema.
+O e-mail oficial do administrador do sistema é: **`klaw.com@gmail.com`**.
 
-A chave da IA **nunca** fica salva no código-fonte nem no front-end. Ela deve ser cadastrada como um segredo no Supabase.
+Por segurança, **não existe cadastro público** na página de login do site. A criação da conta e definição da senha inicial são feitas de forma 100% segura diretamente pelo painel do Supabase:
 
-### Como cadastrar a chave no Supabase:
+### Como criar a conta e definir a senha:
+
+1. No painel do seu projeto no Supabase, clique em **Authentication** (ícone de cadeado/usuários no menu lateral esquerdo).
+2. Na aba **Users**, clique no botão **Add user** (canto superior direito) e selecione **Create user**.
+3. Preencha os campos:
+   - **Email:** `klaw.com@gmail.com`
+   - **Password:** Digite a senha forte que deseja utilizar para acessar o painel administrativo.
+   - **Auto Confirm User?:** Marque esta caixa como **Ativada (Yes)** para que o e-mail já fique confirmado imediatamente, sem depender de confirmação por link.
+4. Clique em **Create user**.
+5. **Pronto!** O gatilho de segurança do banco de dados (`on_auth_user_created_assign_role`) atribuirá automaticamente o papel `admin` na tabela `user_roles` exclusivamente para este e-mail.
+
+---
+
+## 3. Como Acessar o Painel no Site
+
+1. Abra o site no navegador:
+   - Acesse diretamente: `http://localhost:8080/login` (ou o domínio publicado).
+   - Ou clique no botão discreto **"Área restrita"** localizado no canto inferior do rodapé ou dentro do menu.
+2. Na tela de login:
+   - Informe o e-mail: `klaw.com@gmail.com`
+   - Digite a senha definida no passo anterior.
+   - Clique em **"Entrar no Painel"**.
+3. O sistema valida as credenciais e confirma o papel `admin` no banco via RLS.
+4. Você será redirecionado imediatamente para o painel de gerenciamento (`/admin`).
+5. Enquanto você estiver logado:
+   - O menu e o rodapé exibirão as opções **"Painel"** (para voltar ao CMS) e **"Sair"** (para encerrar a sessão com segurança).
+
+### Esqueci minha senha:
+Caso precise recuperar o acesso futuramente, na tela `/login` clique em **"Esqueci minha senha"**, informe `klaw.com@gmail.com` e o Supabase enviará um link de redefinição seguro para a sua caixa de entrada.
+
+---
+
+## 4. Configurar a Chave de Inteligência Artificial (Edge Function)
+
+A Edge Function `ai-assist` permite gerar textos éticos, reescrever conteúdos e criar imagens profissionais diretamente no Editor Visual (`/admin/editor`).
+
+A chave de IA **nunca** fica exposta no código-fonte nem no front-end. Ela deve ser cadastrada como um segredo no Supabase:
 
 1. No menu lateral do [Supabase Dashboard](https://supabase.com/dashboard), clique em **Project Settings** (ícone de engrenagem).
 2. No menu de configurações, vá em **Edge Functions** (ou **Secrets / Vault**).
@@ -44,41 +72,22 @@ A chave da IA **nunca** fica salva no código-fonte nem no front-end. Ela deve s
    - **Secret (Valor):** Cole sua chave de API da OpenAI (iniciada por `sk-...`).
 4. Clique em **Add Secret** (Salvar).
 
-*(Se você preferir usar o Supabase CLI no terminal, basta executar:)*
+*(Se preferir usar o Supabase CLI via terminal:)*
 ```bash
 npx supabase secrets set OPENAI_API_KEY=sua_chave_aqui
 ```
 
-### Diretrizes Éticas Embutidas na IA:
-A função já possui prompt de sistema que cumpre estritamente a Resolução CFP nº 010/05 (Código de Ética do Psicólogo):
-- **Sem promessa de cura ou resultados:** A IA nunca gerará promessas milagrosas ou prazos fechados.
-- **Sem depoimentos de pacientes reais:** Vedado pelo Conselho Federal de Psicologia.
-- **Linguagem acolhedora e científica:** Tom humanizado, sóbrio e reflexivo.
-- **Orientações para situações de crise:** Indicação de serviços de emergência (CVV 188 e SAMU 192).
+### Conformidade Ética (Código de Ética do Psicólogo - CFP):
+- **Sem promessa de cura ou resultados:** Vedado por normas profissionais.
+- **Sem depoimentos de pacientes reais:** Vedado pelo CFP.
+- **Linguagem acolhedora e científica:** Tom humanizado e reflexivo.
+- **Orientações para situações de crise:** Indicação do CVV (188) e emergências.
 
 ---
 
-## 3. Como Vincular seu Usuário como Administrador (`admin`)
+## 5. Segurança do Sistema
 
-O sistema identifica o administrador através da tabela `public.user_roles` e da função de segurança `public.has_role(auth.uid(), 'admin')`.
-
-### Passo a passo:
-
-1. No painel do Supabase, clique em **Authentication** -> **Users**.
-2. Localize a sua conta (ou crie uma nova clicando em *Add user* -> *Create user*).
-3. Copie o valor da coluna **User UID** (exemplo: `a1b2c3d4-e5f6-7890-abcd-1234567890ab`).
-4. Abra o **SQL Editor** do Supabase e execute:
-   ```sql
-   insert into public.user_roles (user_id, role)
-   values ('COLE_SEU_USER_UID_AQUI', 'admin')
-   on conflict (user_id, role) do nothing;
-   ```
-5. Pronto! Agora o seu login possui permissão total de gerenciamento no CMS, upload de imagens no bucket `site-media` e uso da Edge Function `ai-assist`.
-
----
-
-## 4. Reserva Automática (Fallback)
-
-O site foi desenvolvido com proteção contra falhas:
-- Se você ainda não tiver aplicado a migration ou caso o banco fique temporariamente indisponível, **o site público não quebra nem exibe erros**.
-- Ele utiliza automaticamente os textos, contatos e imagens atuais como reserva (*fallback*), garantindo que os visitantes sempre vejam uma página completa e funcional.
+- **Restrição a nível de banco:** Mesmo que alguém tente alterar papéis via API, a trigger `check_admin_role_restriction` impede a atribuição de `admin` para qualquer usuário que não possua o e-mail `klaw.com@gmail.com`.
+- **Rotas protegidas:** Todas as rotas `/admin` (`/admin`, `/admin/ajustes`, `/admin/editor`) são blindadas por verificação de autenticação e papel. Usuários sem login ou com papel `demo`/`user` são redirecionados imediatamente para `/login`.
+- **Privacidade e SEO:** Tanto a página `/login` quanto todas as páginas `/admin` possuem metatag `noindex, nofollow` e estão bloqueadas no arquivo `public/robots.txt`.
+- **Sem cadastro público:** Visitantes comuns não conseguem criar contas no site.

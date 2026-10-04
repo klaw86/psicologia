@@ -46,6 +46,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { AdminAuthGuard } from "@/components/admin/AdminAuthGuard";
 
 export const Route = createFileRoute("/admin/ajustes")({
   head: () => ({
@@ -54,8 +55,16 @@ export const Route = createFileRoute("/admin/ajustes")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: AdminAjustes,
+  component: AdminAjustesWrapper,
 });
+
+function AdminAjustesWrapper() {
+  return (
+    <AdminAuthGuard>
+      <AdminAjustes />
+    </AdminAuthGuard>
+  );
+}
 
 function AdminAjustes() {
   const queryClient = useQueryClient();

@@ -1,13 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, X, MessageCircle, MapPin, Mail, Phone } from "lucide-react";
+import { Menu, X, MessageCircle, MapPin, Mail, Phone, Shield, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NAV, SITE, whatsappLink } from "@/data/site";
 import { useSiteSettings } from "@/hooks/use-public-data";
+import { useAuth } from "@/hooks/use-auth";
 
 function Header() {
   const [aberto, setAberto] = useState(false);
   const site = useSiteSettings();
+  const { user, isAdmin, signOut } = useAuth();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="container-site flex h-16 items-center justify-between">
@@ -30,6 +33,36 @@ function Header() {
           <Button asChild size="sm" className="rounded-full px-5 bg-gold text-charcoal hover:bg-gold-hover font-medium shadow-xs">
             <Link to={site.menu.cta.to}>{site.menu.cta.label}</Link>
           </Button>
+
+          {/* Botão Discreto de Autenticação */}
+          {user && isAdmin ? (
+            <div className="flex items-center gap-3 border-l border-border pl-4">
+              <Link
+                to="/admin/ajustes"
+                className="text-xs font-semibold text-gold hover:underline flex items-center gap-1"
+                title="Ir para o painel administrativo"
+              >
+                <Shield className="h-3 w-3" />
+                Painel
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="text-xs text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1"
+                title="Encerrar sessão"
+              >
+                <LogOut className="h-3 w-3" />
+                Sair
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="text-xs text-muted-foreground/70 transition-colors hover:text-wine pl-2"
+              title="Acesso administrativo"
+            >
+              Área restrita
+            </Link>
+          )}
         </nav>
         <button className="md:hidden text-foreground hover:text-wine" onClick={() => setAberto(!aberto)} aria-label={aberto ? "Fechar menu" : "Abrir menu"}>
           {aberto ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -45,6 +78,40 @@ function Header() {
           <Button asChild className="mt-2 rounded-full bg-gold text-charcoal hover:bg-gold-hover font-medium">
             <Link to={site.menu.cta.to} onClick={() => setAberto(false)}>{site.menu.cta.label}</Link>
           </Button>
+
+          {/* Área Restrita no menu mobile */}
+          {user && isAdmin ? (
+            <div className="mt-3 flex flex-col gap-1 border-t border-border pt-3">
+              <Link
+                to="/admin/ajustes"
+                onClick={() => setAberto(false)}
+                className="rounded-lg px-2 py-2 text-sm text-gold font-semibold flex items-center gap-2"
+              >
+                <Shield className="h-4 w-4" />
+                Painel Administrativo
+              </Link>
+              <button
+                onClick={() => {
+                  setAberto(false);
+                  signOut();
+                }}
+                className="text-left rounded-lg px-2 py-2 text-xs text-destructive hover:bg-muted flex items-center gap-2"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Sair da conta
+              </button>
+            </div>
+          ) : (
+            <div className="mt-2 border-t border-border pt-2">
+              <Link
+                to="/login"
+                onClick={() => setAberto(false)}
+                className="block rounded-lg px-2 py-2 text-xs text-muted-foreground hover:text-wine"
+              >
+                Área restrita
+              </Link>
+            </div>
+          )}
         </nav>
       )}
     </header>
@@ -53,6 +120,8 @@ function Header() {
 
 function Footer() {
   const site = useSiteSettings();
+  const { user, isAdmin, signOut } = useAuth();
+
   return (
     <footer className="mt-24 border-t border-[#333336] bg-charcoal text-ivory">
       <div className="container-site grid gap-10 py-14 md:grid-cols-3">
@@ -69,7 +138,23 @@ function Footer() {
         <div className="flex flex-col gap-2 text-sm">
           {site.menu.itens.filter((n) => n.visivel !== false).map((n) => <Link key={n.to} to={n.to} className="text-[#C8C3BA] transition-colors hover:text-gold">{n.label}</Link>)}
           <Link to="/privacidade" className="text-[#C8C3BA] transition-colors hover:text-gold">Política de Privacidade</Link>
-          <Link to="/admin/ajustes" className="text-xs text-[#8A857B] transition-colors hover:text-gold pt-2">Painel /admin</Link>
+          {user && isAdmin ? (
+            <div className="flex items-center gap-3 pt-2">
+              <Link to="/admin/ajustes" className="text-xs text-gold transition-colors hover:underline">
+                Painel Administrativo
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="text-xs text-[#8A857B] hover:text-destructive transition-colors"
+              >
+                Sair
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="text-xs text-[#8A857B] transition-colors hover:text-gold pt-2">
+              Área restrita
+            </Link>
+          )}
         </div>
       </div>
       <div className="border-t border-[#333336] py-5 text-center text-xs text-[#A29C92] space-y-1">

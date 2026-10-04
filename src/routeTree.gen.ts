@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgendarRouteImport } from './routes/agendar'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EspecialidadesRouteImport } from './routes/especialidades'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -39,6 +40,11 @@ const ContatoRoute = ContatoRouteImport.update({
 const EspecialidadesRoute = EspecialidadesRouteImport.update({
   id: '/especialidades',
   path: '/especialidades',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/agendar': typeof AgendarRoute
   '/contato': typeof ContatoRoute
   '/especialidades': typeof EspecialidadesRoute
+  '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/sobre': typeof SobreRoute
   '/admin/ajustes': typeof AdminAjustesRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/agendar': typeof AgendarRoute
   '/contato': typeof ContatoRoute
   '/especialidades': typeof EspecialidadesRoute
+  '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/sobre': typeof SobreRoute
   '/admin/ajustes': typeof AdminAjustesRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/agendar': typeof AgendarRoute
   '/contato': typeof ContatoRoute
   '/especialidades': typeof EspecialidadesRoute
+  '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/sobre': typeof SobreRoute
   '/admin/ajustes': typeof AdminAjustesRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/agendar'
     | '/contato'
     | '/especialidades'
+    | '/login'
     | '/privacidade'
     | '/sobre'
     | '/admin/ajustes'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/agendar'
     | '/contato'
     | '/especialidades'
+    | '/login'
     | '/privacidade'
     | '/sobre'
     | '/admin/ajustes'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/agendar'
     | '/contato'
     | '/especialidades'
+    | '/login'
     | '/privacidade'
     | '/sobre'
     | '/admin/ajustes'
@@ -164,6 +176,7 @@ export interface RootRouteChildren {
   AgendarRoute: typeof AgendarRoute
   ContatoRoute: typeof ContatoRoute
   EspecialidadesRoute: typeof EspecialidadesRoute
+  LoginRoute: typeof LoginRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   SobreRoute: typeof SobreRoute
   AdminAjustesRoute: typeof AdminAjustesRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/especialidades'
       fullPath: '/especialidades'
       preLoaderRoute: typeof EspecialidadesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -260,6 +280,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgendarRoute: AgendarRoute,
   ContatoRoute: ContatoRoute,
   EspecialidadesRoute: EspecialidadesRoute,
+  LoginRoute: LoginRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   SobreRoute: SobreRoute,
   AdminAjustesRoute: AdminAjustesRoute,
