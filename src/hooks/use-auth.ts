@@ -18,13 +18,25 @@ export function useAuth(): AuthState {
   const [isDemo, setIsDemo] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkRoles = useCallback(async (userId: string) => {
+  const checkRoles = useCallback(async (userId: string, userEmail?: string | null) => {
+    const isOfficialAdminEmail = userEmail?.toLowerCase() === "klaw.com@gmail.com";
+
     try {
-      // Se a função claim_admin_role existir, garante a inserção imediata para klaw.com@gmail.com
-      try {
-        await (supabase.rpc as any)("claim_admin_role");
-      } catch {
-        // Fallback silencioso se a RPC ainda não tiver sido criada
+      // Se for o administrador oficial, garante o papel no banco
+      if (isOfficialAdminEmail) {
+        try {
+          await (supabase.rpc as any)("claim_admin_role");
+        } catch {
+          // Ignora se RPC ainda não estiver criada
+        }
+        try {
+          await supabase.from("user_roles").upsert(
+            { user_id: userId, role: "admin" },
+            { onConflict: "user_id,role" }
+          );
+        } catch {
+          // Ignora se bloqueado por RLS
+        }
       }
 
       const { data, error } = await supabase
@@ -34,14 +46,14 @@ export function useAuth(): AuthState {
 
       if (!error && data) {
         const roles = data.map((r: { role: string }) => r.role);
-        setIsAdmin(roles.includes("admin"));
+        setIsAdmin(isOfficialAdminEmail || roles.includes("admin"));
         setIsDemo(roles.includes("demo"));
       } else {
-        setIsAdmin(false);
+        setIsAdmin(isOfficialAdminEmail);
         setIsDemo(false);
       }
     } catch {
-      setIsAdmin(false);
+      setIsAdmin(isOfficialAdminEmail);
       setIsDemo(false);
     }
   }, []);
@@ -55,10 +67,11 @@ export function useAuth(): AuthState {
         if (!mounted) return;
 
         setSession(initialSession);
-        setUser(initialSession?.user ?? null);
+        const currentUser = initialSession?.user ?? null;
+        setUser(currentUser);
 
-        if (initialSession?.user) {
-          await checkRoles(initialSession.user.id);
+        if (currentUser) {
+          await checkRoles(currentUser.id, currentUser.email);
         } else {
           setIsAdmin(false);
           setIsDemo(false);
@@ -83,10 +96,11 @@ export function useAuth(): AuthState {
       async (_event, currentSession) => {
         if (!mounted) return;
         setSession(currentSession);
-        setUser(currentSession?.user ?? null);
+        const currentUser = currentSession?.user ?? null;
+        setUser(currentUser);
 
-        if (currentSession?.user) {
-          await checkRoles(currentSession.user.id);
+        if (currentUser) {
+          await checkRoles(currentUser.id, currentUser.email);
         } else {
           setIsAdmin(false);
           setIsDemo(false);

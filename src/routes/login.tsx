@@ -74,30 +74,18 @@ function LoginPage() {
   const [recuperacaoSucesso, setRecuperacaoSucesso] = useState(false);
   const [carregandoRecuperacao, setCarregandoRecuperacao] = useState(false);
 
-  // Monitora retorno de login (Google OAuth / Magic Link / Senha)
+  // Redireciona para o painel se já for administrador autenticado
   useEffect(() => {
-    async function verifyOAuthReturn() {
-      if (authLoading || !user) return;
-
-      const userEmail = user.email?.toLowerCase();
-      if (userEmail === "klaw.com@gmail.com") {
-        try {
-          await (supabase.rpc as any)("claim_admin_role");
-        } catch {
-          // Ignora se RPC não existir
-        }
-        toast.success("Autenticado com sucesso como administrador!");
-        navigate({ to: "/admin" });
+    if (!authLoading && user) {
+      if (isAdmin) {
+        navigate({ to: "/admin/ajustes", replace: true });
       } else {
-        await supabase.auth.signOut();
         setErroMsg(
-          `Acesso negado: A conta conectada (${user.email}) não é a administradora autorizada. Conecte-se com klaw.com@gmail.com.`
+          `Acesso negado: A conta conectada (${user.email}) não possui privilégios de administrador. Utilize a conta klaw.com@gmail.com.`
         );
       }
     }
-
-    verifyOAuthReturn();
-  }, [user, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, navigate]);
 
   // Login com a Conta Google (OAuth)
   async function handleGoogleLogin() {
@@ -107,7 +95,7 @@ function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/login`,
+          redirectTo: `${window.location.origin}/admin/ajustes`,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
@@ -144,7 +132,7 @@ function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email: emailAlvo,
         options: {
-          emailRedirectTo: `${window.location.origin}/login`,
+          emailRedirectTo: `${window.location.origin}/admin/ajustes`,
         },
       });
 
