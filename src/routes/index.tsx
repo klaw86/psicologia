@@ -50,6 +50,9 @@ function Index() {
   const faqEyebrow = getBlock("faq", "eyebrow", "Dúvidas frequentes");
   const faqTitulo = getBlock("faq", "titulo", "Perguntas frequentes");
   const faqItens = getBlock("faq", "itens", FAQ);
+  const especialidadesLista = getBlock("especialidades", "itens", ESPECIALIDADES);
+  const fotoConsultorio = site.fotoConsultorio || consultorio;
+  const fotoRetrato = site.foto || retrato;
 
   return (
     <SiteLayout>
@@ -74,7 +77,7 @@ function Index() {
               <span className="flex items-center gap-2"><Monitor className="h-4 w-4 text-gold" />Online</span>
             </div>
           </div>
-          <img src={consultorio} alt="Consultório acolhedor com poltrona confortável, sofá claro e plantas" width={1280} height={960} className="aspect-[4/3] w-full rounded-3xl object-cover shadow-soft" />
+          <img src={fotoConsultorio} alt="Consultório acolhedor com poltrona confortável, sofá claro e plantas" width={1280} height={960} className="aspect-[4/3] w-full rounded-3xl object-cover shadow-soft" />
         </div>
       </section>
 
@@ -82,7 +85,7 @@ function Index() {
         <p className="eyebrow">Como posso ajudar</p>
         <h2 className="mt-3 max-w-2xl text-3xl text-wine md:text-4xl">Cada história merece ser cuidada com atenção.</h2>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {ESPECIALIDADES.map((e) => (
+          {especialidadesLista.map((e) => (
             <div key={e.titulo} className="rounded-2xl border border-border bg-card p-6 transition hover:shadow-soft hover:border-gold/40">
               <h3 className="text-xl text-wine font-medium">{e.titulo}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{e.texto}</p>
@@ -93,8 +96,8 @@ function Index() {
 
       <section className="container-site mt-24 grid items-center gap-12 md:grid-cols-[2fr_3fr]">
         <img
-          src={retrato}
-          alt="Dra. Helena Duarte, psicóloga clínica"
+          src={fotoRetrato}
+          alt={`${site.nome}, psicóloga clínica`}
           width={1200}
           height={1500}
           loading="lazy"
@@ -128,20 +131,22 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-site mt-24">
-        <p className="eyebrow">{depoimentosEyebrow}</p>
-        <h2 className="mt-3 text-3xl text-wine md:text-4xl">{depoimentosTitulo}</h2>
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {(depoimentos ?? []).map((d) => (
-            <figure key={d.id} className="rounded-2xl border border-border/80 bg-card p-6 shadow-soft">
-              <Quote className="h-6 w-6 text-gold" aria-hidden />
-              <blockquote className="mt-3 leading-relaxed text-foreground">{d.texto}</blockquote>
-              <figcaption className="mt-4 text-sm text-muted-foreground">— {d.autor}</figcaption>
-            </figure>
-          ))}
-        </div>
-        <p className="mt-4 text-xs text-muted-foreground">{depoimentosAviso}</p>
-      </section>
+      {site.depoimentosConfig.visivel !== false && (
+        <section className="container-site mt-24">
+          <p className="eyebrow">{depoimentosEyebrow}</p>
+          <h2 className="mt-3 text-3xl text-wine md:text-4xl">{depoimentosTitulo}</h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {(depoimentos ?? []).map((d) => (
+              <figure key={d.id} className="rounded-2xl border border-border/80 bg-card p-6 shadow-soft">
+                <Quote className="h-6 w-6 text-gold" aria-hidden />
+                <blockquote className="mt-3 leading-relaxed text-foreground">{d.texto}</blockquote>
+                <figcaption className="mt-4 text-sm text-muted-foreground">— {d.autor}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground">{depoimentosAviso}</p>
+        </section>
+      )}
 
       <section className="container-site mt-24 max-w-3xl">
         <p className="eyebrow">{faqEyebrow}</p>

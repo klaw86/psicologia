@@ -15,14 +15,14 @@
   --radius-3xl: calc(var(--radius) + 12px);
 
   /* Luxury Editorial Named Palette */
-  --color-charcoal: #1F1F21;
-  --color-ivory: #F7F4ED;
-  --color-gold: #C5A25D;
-  --color-gold-hover: #B5924B;
-  --color-wine: #5C2A3A;
-  --color-wine-hover: #481E2B;
-  --color-smoke: #A29C92;
-  --color-smoke-light: #DDD7CD;
+  --color-charcoal: var(--charcoal, #1F1F21);
+  --color-ivory: var(--ivory, #F7F4ED);
+  --color-gold: var(--gold, #C5A25D);
+  --color-gold-hover: var(--gold-hover, #B5924B);
+  --color-wine: var(--wine, #5C2A3A);
+  --color-wine-hover: var(--wine-hover, #481E2B);
+  --color-smoke: var(--smoke, #A29C92);
+  --color-smoke-light: var(--smoke-light, #DDD7CD);
 
   /* Theme tokens */
   --color-background: var(--background);
