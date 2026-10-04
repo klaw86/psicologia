@@ -60,7 +60,6 @@ function Footer() {
         <div className="flex flex-col gap-2 text-sm">
           {NAV.map((n) => <Link key={n.to} to={n.to} className="text-muted-foreground hover:text-foreground">{n.label}</Link>)}
           <Link to="/privacidade" className="text-muted-foreground hover:text-foreground">Política de Privacidade</Link>
-          <Link to="/admin" className="text-muted-foreground hover:text-foreground">Área administrativa</Link>
         </div>
       </div>
       <div className="border-t border-border py-5 text-center text-xs text-muted-foreground">

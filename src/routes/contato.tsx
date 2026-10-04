@@ -79,7 +79,7 @@ function Contato() {
           <div className="grid gap-2">
             <Label htmlFor="mensagem">Mensagem</Label>
             <Textarea id="mensagem" rows={5} value={f.mensagem} onChange={(e) => setF({ ...f, mensagem: e.target.value })} maxLength={1000} />
-            {erros.mensagem && <p className="text-sm text-destructive">{erros.mensagem}</p>}
+            {erros["mensagem"] && <p className="text-sm text-destructive">{erros["mensagem"]}</p>}
           </div>
           <Button type="submit" className="rounded-full" disabled={enviando}>{enviando ? "Enviando…" : "Enviar mensagem"}</Button>
         </form>

@@ -45,7 +45,7 @@ export function BookingForm() {
     queryKey: ["ocupados", dias[0], dias[dias.length - 1]],
     enabled: dias.length > 0,
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("horarios_ocupados", { _de: dias[0], _ate: dias[dias.length - 1] });
+      const { data, error } = await supabase.rpc("horarios_ocupados", { _de: dias[0]!, _ate: dias[dias.length - 1]! });
       if (error) throw error;
       return new Set((data as string[]).map((t) => new Date(t).toISOString()));
     },
@@ -111,13 +111,13 @@ export function BookingForm() {
   return (
     <form onSubmit={enviar} className="grid gap-6 rounded-3xl border border-border bg-card p-6 shadow-soft md:p-10" noValidate>
       <div className="grid gap-5 md:grid-cols-2">
-        <Campo id="nome" label="Nome completo" erro={erros.nome}>
+        <Campo id="nome" label="Nome completo" erro={erros["nome"]}>
           <Input id="nome" value={form.nome} onChange={(e) => set("nome", e.target.value)} maxLength={120} autoComplete="name" />
         </Campo>
-        <Campo id="email" label="E-mail" erro={erros.email}>
+        <Campo id="email" label="E-mail" erro={erros["email"]}>
           <Input id="email" type="email" value={form.email} onChange={(e) => set("email", e.target.value)} maxLength={255} autoComplete="email" />
         </Campo>
-        <Campo id="telefone" label="Telefone / WhatsApp" erro={erros.telefone}>
+        <Campo id="telefone" label="Telefone / WhatsApp" erro={erros["telefone"]}>
           <Input id="telefone" type="tel" value={form.telefone} onChange={(e) => set("telefone", e.target.value)} maxLength={30} autoComplete="tel" placeholder="(65) 90000-0000" />
         </Campo>
         <div className="grid gap-2">
@@ -161,7 +161,7 @@ export function BookingForm() {
             ))}
           </div>
         )}
-        {erros.inicio && <p className="text-sm text-destructive">{erros.inicio}</p>}
+        {erros["inicio"] && <p className="text-sm text-destructive">{erros["inicio"]}</p>}
       </div>
 
       <Campo id="mensagem" label="Mensagem (opcional)">
@@ -174,7 +174,7 @@ export function BookingForm() {
   );
 }
 
-function Campo({ id, label, erro, children }: { id: string; label: string; erro?: string; children: React.ReactNode }) {
+function Campo({ id, label, erro, children }: { id: string; label: string; erro?: string | undefined; children: React.ReactNode }) {
   return (
     <div className="grid gap-2">
       <Label htmlFor={id}>{label}</Label>
